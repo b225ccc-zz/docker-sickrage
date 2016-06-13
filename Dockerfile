@@ -30,7 +30,9 @@ RUN \
 # create sickrage user
 # user will default to the 'nogroup' group
 RUN \
-  adduser --system --uid 65001 --no-create-home sickrage
+  groupadd --system --gid 1001 media && \
+  adduser --system --uid 65001 --no-create-home sickrage && \
+  usermod -aG media sickrage
 
 # add custom files
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
