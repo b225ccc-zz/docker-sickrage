@@ -1,13 +1,17 @@
 sudo: required
 
-language: python
-
 services:
   - docker
 
-before_install:
-  - docker build -t b225ccc/sickrage .
+env:
+  global:
+    - COMMIT=${TRAVIS_COMMIT::8}
 
 after_success:
-  - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"I
-  - docker push b225ccc/sickrage
+  - docker login -e "$DOCKER_EMAIL" -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+  - export REPO=b225ccc/docker-sickrage
+  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
+  - docker build -f Dockerfile -t $REPO:$COMMIT .
+  - docker tag $REPO:$COMMIT $REPO:$TAG
+  - docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER
+  - docker push $REPO
