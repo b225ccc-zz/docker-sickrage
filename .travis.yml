@@ -11,6 +11,8 @@ env:
   global:
     - COMMIT=${TRAVIS_COMMIT::8}
 
+install: true
+
 after_success:
   - docker login -e "$DOCKER_EMAIL" -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
   - export REPO=b225ccc/docker-sickrage
