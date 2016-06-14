@@ -19,7 +19,8 @@ before_script:
   - docker build -f Dockerfile -t $REPO:$COMMIT .
 
 script:
-  - docker ps | grep -q $REPO
+  - docker run -d -p 127.0.0.1:8081:8081 --name sickrage $REPO:$COMMIT
+  - docker ps | grep -q sickrage
 
 after_success:
   - docker login -e "$DOCKER_EMAIL" -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
